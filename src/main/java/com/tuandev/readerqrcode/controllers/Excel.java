@@ -1,15 +1,14 @@
 package com.tuandev.readerqrcode.controllers;
 
 import com.tuandev.readerqrcode.models.QRCodeData;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class Excel {
@@ -24,38 +23,35 @@ public class Excel {
             Row headerRow = sheet.createRow(0);
             headerRow.createCell(0).setCellValue("Data");
 
-            for(int i = 0; i < qrCodeDataList.size(); ++i) {
+            Font font = workbook.createFont();
+            font.setFontName("Calibri");
+            CellStyle style = workbook.createCellStyle();
+            style.setFont(font);
+
+            for (int i = 0; i < qrCodeDataList.size(); ++i) {
                 Row row = sheet.createRow(i + 1);
                 Cell cell = row.createCell(0);
-                cell.setCellValue(((QRCodeData)qrCodeDataList.get(i)).getValue());
+                String asciiString = new String(qrCodeDataList.get(i).getValue().getBytes(StandardCharsets.UTF_8), StandardCharsets.US_ASCII);
+                System.out.println(asciiString);
+                cell.setCellValue(asciiString);
+                cell.setCellStyle(style);
             }
 
             sheet.autoSizeColumn(0);
-            FileOutputStream outputStream = new FileOutputStream(excelFile);
-
-            try {
+            try (FileOutputStream outputStream = new FileOutputStream(excelFile)) {
                 workbook.write(outputStream);
-            } catch (Throwable var10) {
-                try {
-                    outputStream.close();
-                } catch (Throwable var9) {
-                    var10.addSuppressed(var9);
-                }
-
-                throw var10;
             }
-
-            outputStream.close();
-        } catch (Throwable var11) {
-            try {
-                workbook.close();
-            } catch (Throwable var8) {
-                var11.addSuppressed(var8);
-            }
-
-            throw var11;
+        } finally {
+            workbook.close();
         }
-
-        workbook.close();
     }
+
+    public static void writeTextFile(File textFile, List<QRCodeData> qrCodeDataList) throws IOException {
+        try (FileWriter writer = new FileWriter(textFile)) {
+            for (QRCodeData data : qrCodeDataList) {
+                writer.write(data.getValue() + "\n");
+            }
+        }
+    }
+
 }

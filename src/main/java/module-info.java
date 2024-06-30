@@ -8,6 +8,7 @@ module com.tuandev.readerqrcode {
     requires com.google.zxing.javase;
     requires org.apache.pdfbox;
     requires org.apache.poi.ooxml;
+    requires org.apache.logging.log4j;
 
     exports com.tuandev.readerqrcode.views;
     exports com.tuandev.readerqrcode.controllers;

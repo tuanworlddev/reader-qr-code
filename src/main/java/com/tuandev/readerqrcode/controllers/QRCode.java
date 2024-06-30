@@ -53,7 +53,7 @@ public class QRCode {
             PDFRenderer pdfRenderer = new PDFRenderer(document);
 
             for(int i = 0; i < document.getNumberOfPages(); ++i) {
-                BufferedImage bufferedImage = pdfRenderer.renderImageWithDPI(i, 300.0F, ImageType.RGB);
+                BufferedImage bufferedImage = pdfRenderer.renderImageWithDPI(i, 500.0F, ImageType.RGB);
                 String fileName = outDir + "/page_" + i + ".png";
                 File image = new File(fileName);
                 ImageIO.write(bufferedImage, "png", image);

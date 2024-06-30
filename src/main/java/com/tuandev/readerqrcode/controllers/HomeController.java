@@ -103,19 +103,20 @@ public class HomeController implements Initializable {
             this.showLoginPop();
         } else {
             this.fileChooser.setTitle("Export Excel");
-            this.fileChooser.getExtensionFilters().setAll(new FileChooser.ExtensionFilter[]{new FileChooser.ExtensionFilter("Excel Files", new String[]{"*.xlsx"})});
+            this.fileChooser.getExtensionFilters().setAll(new FileChooser.ExtensionFilter[]{new FileChooser.ExtensionFilter("Text Files", new String[]{"*.txt"})});
             File excelFile = this.fileChooser.showSaveDialog((Window)null);
             if (excelFile != null && !this.dataList.isEmpty()) {
                 try {
-                    Excel.writeExcel(excelFile, this.dataList);
+                    Excel.writeTextFile(excelFile, this.dataList);
                     this.showOpenExcelDialog(excelFile);
                 } catch (IOException var4) {
                     this.showErrorDialog(var4.getMessage());
                 }
             }
         }
-
     }
+
+
 
     private ImageView imageItem(File file) {
         Image image = new Image(file.toURI().toString());
